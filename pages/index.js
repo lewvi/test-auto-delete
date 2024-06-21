@@ -53,7 +53,7 @@ const data = [
 
 const CardListContent = ({ title, data, onSelectItem, remove = false }) => {
   return (
-    <Card title={title || "Title"} className="min-h-[calc(100vh-80px)]">
+    <Card title={title || "Title"} className="min-h-[calc(100vh-80px)] h-full">
       {data?.map((item, index) => {
         return (
           <Card
@@ -130,7 +130,7 @@ const Home = () => {
 
   return (
     <div className="p-5 min-h-[calc(100vh-50px)]">
-      <Card className="bg-neutral-200">
+      <Card className="bg-neutral-200 h-full">
         <Row gutter={[12, 8]}>
           <Col xl={8} md={8} xs={24}>
             <CardListContent
