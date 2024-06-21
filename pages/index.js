@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import { Card, Col, Row, Typography } from "antd";
-import { cloneDeep, differenceWith, isEqual} from "lodash";
+import { Button, Card, Col, Row, Typography } from "antd";
+import { cloneDeep, differenceWith, isEqual } from "lodash";
 import { useMemo, useState } from "react";
 
 const data = [
@@ -51,7 +51,38 @@ const data = [
   },
 ];
 
-export default function Home() {
+const CardListContent = ({ title, data, onSelectItem, remove = false }) => {
+  return (
+    <Card title={title || "Title"} className="min-h-[calc(100vh-80px)]">
+      {data?.map((item, index) => {
+        return (
+          <Card
+            key={index}
+            styles={{ body: { padding: 16 } }}
+            className="mb-2 cursor-pointer"
+            onClick={() => onSelectItem(item)}
+            hoverable
+          >
+            <Row>
+              <Col span={12}>
+                <Typography.Text>{item?.name || "N/A"}</Typography.Text>
+              </Col>
+              <Col span={12} className="flex justify-end">
+                {remove ? (
+                  <Button type="link" size="small" children="Remove" danger/>
+                ) : (
+                  <Button type="link" size="small" children="Select" />
+                )}
+              </Col>
+            </Row>
+          </Card>
+        );
+      })}
+    </Card>
+  );
+};
+
+const Home = () => {
   const [selectItem, setSelectItem] = useState([]);
 
   const dataList = useMemo(() => {
@@ -99,79 +130,35 @@ export default function Home() {
 
   return (
     <div className="p-5 min-h-[calc(100vh-50px)]">
-      <Card className="bg-neutral-200 h-full">
-        <Row gutter={[8, 8]}>
+      <Card className="bg-neutral-200">
+        <Row gutter={[12, 8]}>
           <Col xl={8} md={8} xs={24}>
-            <Card title="All List" className="h-[calc(100vh-80px)]">
-              {dataList?.map((item, index) => {
-                return (
-                  <Card
-                    key={index}
-                    styles={{ body: { padding: 12 } }}
-                    className="mb-2 cursor-pointer"
-                    onClick={() => handleSelectItem(item)}
-                    hoverable
-                  >
-                    <Typography.Text>{item?.name || "N/A"}</Typography.Text>
-                  </Card>
-                );
-              })}
-            </Card>
+            <CardListContent
+              title="All List"
+              data={dataList || []}
+              onSelectItem={handleSelectItem}
+            />
           </Col>
           <Col xl={8} md={8} xs={24}>
-            <Card
+            <CardListContent
               title="Fruit"
-              className="min-h-[calc(100vh-80px)] cursor-pointer"
-              onClick={() =>
-                handleRemoveItem(
-                  dataFruit?.[
-                    dataFruit?.length - 1 === -1 ? 0 : dataFruit?.length - 1
-                  ]
-                )
-              }
-            >
-              {dataFruit?.map((item, index) => {
-                return (
-                  <Card
-                    key={index}
-                    className="mb-2"
-                    styles={{ body: { padding: 12 } }}
-                    // onClick={() => handleRemoveItem(item)}
-                  >
-                    <Typography.Text>{item?.name || "N/A"}</Typography.Text>
-                  </Card>
-                );
-              })}
-            </Card>
+              data={dataFruit || []}
+              onSelectItem={handleRemoveItem}
+              remove
+            />
           </Col>
           <Col xl={8} md={8} xs={24}>
-            <Card
+            <CardListContent
               title="Vegetable"
-              className="min-h-[calc(100vh-80px)] cursor-pointer"
-              onClick={() =>
-                handleRemoveItem(
-                  dataVegetable?.[
-                    dataVegetable?.length - 1 === -1 ? 0 : dataVegetable?.length - 1
-                  ]
-                )
-              }
-            >
-              {dataVegetable?.map((item, index) => {
-                return (
-                  <Card
-                    key={index}
-                    className="mb-2"
-                    styles={{ body: { padding: 12 } }}
-                    // onClick={() => handleRemoveItem(item)}
-                  >
-                    <Typography.Text>{item?.name || "N/A"}</Typography.Text>
-                  </Card>
-                );
-              })}
-            </Card>
+              data={dataVegetable || []}
+              onSelectItem={handleRemoveItem}
+              remove
+            />
           </Col>
         </Row>
       </Card>
     </div>
   );
-}
+};
+
+export default Home;
